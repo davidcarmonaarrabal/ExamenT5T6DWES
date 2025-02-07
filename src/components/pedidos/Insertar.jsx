@@ -17,6 +17,13 @@ function PedidoInsertar({ repartidores, pizzas }) {
                 }
             </select>
 
+            <select name="pizzas" multiple>
+                {pizzas.map(pizza => (
+                    <option key={pizza.id} value={pizza.id}>
+                        {pizza.nombre} - ${pizza.precio}
+                    </option>
+                ))}
+            </select>
 
             <button className="border-2 border-black">Insertar pedido</button>
         </form>
