@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Repartidor {
+  id        Int      @id @default(autoincrement())
+  nombre    String
+  telefono  String
+  pedidos   Pedido[]
+}
+
+model Pedido {
+  id            Int       @id @default(autoincrement())
+  fechaHora     DateTime
+  nombreCliente String
+  direccion     String
+  repartidorId  Int
+  repartidor    Repartidor @relation(fields: [repartidorId], references: [id])
+  pizzas        PedidoPizza[]
+}
+
+model Pizza {
+  id     Int      @id @default(autoincrement())
+  nombre String
+  precio Float
+  pedidos PedidoPizza[]
+}
+
+model PedidoPizza {
+  pedidoId Int
+  pizzaId  Int
+  pedido   Pedido @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  pizza    Pizza  @relation(fields: [pizzaId], references: [id], onDelete: Cascade)
+  
+  @@id([pedidoId, pizzaId])
+}
