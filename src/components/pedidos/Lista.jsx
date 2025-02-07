@@ -1,4 +1,5 @@
 import { obtenerPedidos } from "@/lib/data";
+import { obtenerRepartidores } from "@/lib/data";
 import PedidoInsertar from "./Insertar";
 import PedidoModificar from "./Modificar";
 import PedidoEliminar from "./Eliminar";
@@ -7,11 +8,12 @@ import Modal from "../Modal";
 
 export default async function Pedidos() {
     const pedidos = await obtenerPedidos();
+    const repartidores = await obtenerRepartidores();
 
     return (
         <div>
             <Modal openElement={<p className="inline border-2 border-black">Insertar pedido</p>}>
-                <PedidoInsertar />
+                <PedidoInsertar repartidores={repartidores} />
             </Modal>
 
             {pedidos.map((pedido) => (

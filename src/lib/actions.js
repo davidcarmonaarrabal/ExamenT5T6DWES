@@ -45,41 +45,51 @@ export async function eliminarRepartidor(formData) {
 // ------------------------ PEDIDOS ------------------------
 
 export async function insertarPedido(formData) {
-    const fechaHora = new Date(formData.get('fechaHora'))
-    const nombreCliente = formData.get('nombreCliente')
-    const direccion = formData.get('direccion')
-    const repartidorId = Number(formData.get('repartidorId'))
+    const nombreCliente = formData.get('nombreCliente');
+    const fechaHora = new Date(formData.get('fechaHora'));
+    const direccion = formData.get('direccion');
+    const repartidorId = Number(formData.get('repartidorId'));
+    const pizzas = formData.getAll('pizzas'); // Asumiendo que recibes un array de IDs de pizzas
 
-    await prisma.pedido.create({
+    // Crear el pedido
+    const nuevoPedido = await prisma.pedido.create({
         data: {
-            fechaHora: fechaHora,
-            nombreCliente: nombreCliente,
-            direccion: direccion,
-            repartidorId: repartidorId
-        }
-    })
-    revalidatePath('/pedidos')
+            nombreCliente,
+            fechaHora,
+            direccion,
+            repartidorId,
+            pizzas: {
+                connect: pizzas.map((pizzaId) => ({ id: Number(pizzaId) })),
+            },
+        },
+    });
+
+    revalidatePath('/pedidos');
 }
 
 export async function modificarPedido(formData) {
-    const id = Number(formData.get('id'))
-    const fechaHora = new Date(formData.get('fechaHora'))
-    const nombreCliente = formData.get('nombreCliente')
-    const direccion = formData.get('direccion')
-    const repartidorId = Number(formData.get('repartidorId'))
+    const id = Number(formData.get('id'));
+    const nombreCliente = formData.get('nombreCliente');
+    const fechaHora = new Date(formData.get('fechaHora'));
+    const direccion = formData.get('direccion');
+    const repartidorId = Number(formData.get('repartidorId'));
+    const pizzas = formData.getAll('pizzas'); // Asumiendo que recibes un array de IDs de pizzas
 
+    // Modificar el pedido
     await prisma.pedido.update({
-        where: {
-            id: id
-        },
+        where: { id },
         data: {
-            fechaHora: fechaHora,
-            nombreCliente: nombreCliente,
-            direccion: direccion,
-            repartidorId: repartidorId
-        }
-    })
-    revalidatePath('/pedidos')
+            nombreCliente,
+            fechaHora,
+            direccion,
+            repartidorId,
+            pizzas: {
+                connect: pizzas.map((pizzaId) => ({ id: Number(pizzaId) })),
+            },
+        },
+    });
+
+    revalidatePath(`/pedidos/${id}`);
 }
 
 export async function eliminarPedido(formData) {

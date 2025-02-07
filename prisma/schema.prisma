@@ -7,35 +7,43 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Relación 1 a N entre Repartidor y Pedido
 model Repartidor {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   nombre    String
   telefono  String
-  pedidos   Pedido[]
+  pedidos   Pedido[]  // Relación 1:N con Pedido
+  @@map("Repartidor")
 }
 
+// Relación 1 a N entre Pedido y Repartidor
 model Pedido {
-  id            Int       @id @default(autoincrement())
+  id            Int         @id @default(autoincrement())
   fechaHora     DateTime
   nombreCliente String
   direccion     String
-  repartidorId  Int
-  repartidor    Repartidor @relation(fields: [repartidorId], references: [id])
+  repartidorId  Int         // Llave foránea a Repartidor
+  repartidor    Repartidor  @relation(fields: [repartidorId], references: [id]) // Relación N:1 con Repartidor
   pizzas        PedidoPizza[]
+  @@map("Pedido")
 }
 
+// Relación N a N entre Pizza y Pedido
 model Pizza {
-  id     Int      @id @default(autoincrement())
-  nombre String
-  precio Float
+  id      Int         @id @default(autoincrement())
+  nombre  String
+  precio  Float
   pedidos PedidoPizza[]
+  @@map("Pizza")
 }
 
+// Relación intermedia entre Pedido y Pizza (relación N a N)
 model PedidoPizza {
   pedidoId Int
   pizzaId  Int
   pedido   Pedido @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
   pizza    Pizza  @relation(fields: [pizzaId], references: [id], onDelete: Cascade)
-  
+
   @@id([pedidoId, pizzaId])
+  @@map("pedido_pizza")
 }

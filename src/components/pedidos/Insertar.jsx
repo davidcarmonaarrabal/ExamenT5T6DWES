@@ -1,13 +1,24 @@
 import { insertarPedido } from "@/lib/actions";
 
-function PedidoInsertar() {
+function PedidoInsertar({ repartidores, pizzas }) {
     return (
         <form action={insertarPedido}>
-            <input name="fechaHora" type="datetime-local" placeholder="Fecha y hora" />
-            <input name="nombreCliente" placeholder="Nombre del cliente" />
-            <input name="direccion" placeholder="Dirección" />
-            <input name="repartidorNombre" placeholder="Nombre del repartidor" />
-            <button className="border-2 border-black">Insertar Pedido</button>
+            <input name="nombreCliente" placeholder="Nombre del Cliente" />
+            <input name="fechaHora" type="datetime-local" />
+            <input name="direccion" placeholder="Dirección de entrega" />
+
+            <select name="repartidorId">
+                {
+                    repartidores.map(repartidor =>
+                        <option key={repartidor.id} value={repartidor.id}>
+                            {repartidor.nombre}
+                        </option>
+                    )
+                }
+            </select>
+
+
+            <button className="border-2 border-black">Insertar pedido</button>
         </form>
     );
 }
