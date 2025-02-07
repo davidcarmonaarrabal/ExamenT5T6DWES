@@ -41,8 +41,7 @@ export async function obtenerPizzas() {
 
 export async function obtenerPizza(id) {
     const pizza = await prisma.pizza.findUnique({
-        where: { id: +id },
-        include: { pedidos: true }
+        where: { id: +id }
     })
     return pizza
 }
